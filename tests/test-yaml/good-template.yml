@@ -1,0 +1,4 @@
+sampleProperty:
+  sampleSubProperty: value
+
+requiredProperty: value
