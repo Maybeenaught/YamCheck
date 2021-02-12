@@ -15,9 +15,4 @@ jobs:
     - name: Run Pester
       shell: pwsh
       run: |
-        Get-ChildItem -Recurse
-        Import-Module Pester
-        Invoke-Pester ./tests/YamCheck.Tests.ps1
-        Write-Host 'Total Tests Executed...:  ${{ steps.test_yamcheck.outputs.total_count }}'
-        Write-Host 'Total Tests PASSED.....:  ${{ steps.test_yamcheck.outputs.passed_count }}'
-        Write-Host 'Total Tests FAILED.....:  ${{ steps.test_yamcheck.outputs.failed_count }}'
+        Invoke-Pester tests/YamCheck.Tests.ps1 -Passthru
