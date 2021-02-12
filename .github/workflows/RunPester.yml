@@ -12,17 +12,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Test YamCheck
-        id: test_yamcheck
-        uses: zyborg/pester-tests-report@v1
-        with:
-          include_paths: tests
-          report_name: yamcheck_tests
-          report_title: YamCheck Tests
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: dump test results
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Run Pester
       shell: pwsh
       run: |
-        Write-Host 'Total Tests Executed...:  ${{ steps.test_yamcheck.outputs.total_count }}'
-        Write-Host 'Total Tests PASSED.....:  ${{ steps.test_yamcheck.outputs.passed_count }}'
-        Write-Host 'Total Tests FAILED.....:  ${{ steps.test_yamcheck.outputs.failed_count }}'
+        Invoke-Pester tests/YamCheck.Tests.ps1 -Passthru
