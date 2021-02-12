@@ -1,0 +1,20 @@
+name: Run Pester Tests
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    - name: Run Pester
+      shell: pwsh
+      run: |
+        Invoke-Pester tests/YamCheck.Tests.ps1 -Passthru

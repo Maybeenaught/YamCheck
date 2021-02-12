@@ -1,6 +1,9 @@
 Describe 'Assert-YamlPolicies' {
   BeforeAll {
-    Get-Module YamCheck | Remove-Module
+    Get-Module 'YamCheck' | Remove-Module
+    Get-Module 'powershell-yaml' | Remove-Module
+    Install-Module -Name 'powershell-yaml' -RequiredVersion '0.4.2' -Force -AllowClobber
+    Import-Module 'powershell-yaml'
     Import-Module $PSScriptRoot/../YamCheck.psd1
   }
 
