@@ -15,23 +15,23 @@ function Assert-YamlPolicies {
       $filePolicies = (Import-Module $_.FullName -PassThru).ExportedFunctions.Values | ForEach-Object {
         $checkFunc = $_
         [PSCustomObject]@{
-          PolicyScript  = $_
-          Results       = $yamls | ForEach-Object { 
+          PolicyScript = $_
+          Results      = $yamls | ForEach-Object { 
             $yaml = $_
             $checkSplat = @{
-              ScriptBlock   = $checkFunc.ScriptBlock
-              ArgumentList  = $yaml.Yaml
+              ScriptBlock  = $checkFunc.ScriptBlock
+              ArgumentList = $yaml.Yaml
             }
             [PSCustomObject]@{
-              File = $yaml.Filepath
+              File   = $yaml.Filepath
               Result = Invoke-Command @checkSplat
             }
-           }
+          }
         }
       }
       [PSCustomObject]@{
         PolicyFile = $_.BaseName
-        Policies = $filePolicies
+        Policies   = $filePolicies
       }
     }
   }
@@ -47,8 +47,8 @@ function Get-YamlFiles {
   $YamlDirectories | ForEach-Object {
     Get-ChildItem $_ -Include *.yml -Recurse | ForEach-Object {
       @{
-        Filepath  = $_.BaseName
-        Yaml      = Get-Content $_ | ConvertFrom-Yaml
+        Filepath = $_.BaseName
+        Yaml     = Get-Content $_ | ConvertFrom-Yaml
       }
     }
   }
