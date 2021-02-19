@@ -1,5 +1,13 @@
 #Requires -Modules @{ ModuleName="powershell-yaml"; ModuleVersion="0.4.2" }
 
+class FailureSeverity : Attribute {
+  [ValidateSet("Error", "Warning", "Information")] [string] $severityLevel
+
+  FailureSeverity([string]$severityLevel) {
+    $this.severityLevel = $severityLevel
+  }
+}
+
 function Assert-YamlPolicies {
   [CmdletBinding()]
   param(

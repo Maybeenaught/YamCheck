@@ -1,4 +1,5 @@
 function Assert-RequiredPropertyExists {
+  [FailureSeverity("Error")]
   [CmdletBinding()]
   param(
     [Parameter(Mandatory=$true)] [Hashtable] $yaml
@@ -7,6 +8,7 @@ function Assert-RequiredPropertyExists {
 }
 
 function Assert-SubPropertyEqualsValue {
+  [FailureSeverity("Warning")]
   [CmdletBinding()]
   param(
     [Parameter(Mandatory=$true)] [Hashtable] $yaml
