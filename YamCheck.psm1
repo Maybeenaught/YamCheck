@@ -16,35 +16,39 @@ function Assert-YamlPolicies {
   )
 
   $yamls = Get-YamlFiles $YamlDirectories
+  $policies = Get-Policies $PolicyDirectories
 
-  $policies = $PolicyDirectories | ForEach-Object {
-    $policyDir = $_
-    Get-ChildItem $policyDir -Include *.psm1 -Recurse | ForEach-Object { 
-      $filePolicies = (Import-Module $_.FullName -PassThru).ExportedFunctions.Values | ForEach-Object {
-        $checkFunc = $_
-        [PSCustomObject]@{
-          PolicyScript = $_
-          Results      = $yamls | ForEach-Object { 
-            $yaml = $_
-            $checkSplat = @{
-              ScriptBlock  = $checkFunc.ScriptBlock
-              ArgumentList = $yaml.Yaml
-            }
-            [PSCustomObject]@{
-              File   = $yaml.Filepath
-              Result = Invoke-Command @checkSplat
-            }
-          }
+  $policies | ForEach-Object {
+    $_.Policies | ForEach-Object {
+      $policy = $_
+      $yamls | ForEach-Object { 
+        $checkSplat = @{
+          ScriptBlock  = $policy.ScriptBlock
+          ArgumentList = $_.Yaml
         }
-      }
-      [PSCustomObject]@{
-        PolicyFile = $_.BaseName
-        Policies   = $filePolicies
+        @{
+          Policy = $policy
+          Yaml = $_
+          Result = Invoke-Command @checkSplat
+        }
       }
     }
   }
+}
 
-  $policies
+function Get-Policies {
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory = $true)] [System.IO.FileInfo[]] $PolicyDirectories
+  )
+  $PolicyDirectories | ForEach-Object {
+    Get-ChildItem $_ -Include *.psm1 -Recurse | ForEach-Object {
+      [PSCustomObject]@{
+        PolicyFile = $_.BaseName
+        Policies   = (Import-Module $_.FullName -PassThru).ExportedFunctions.Values
+      }
+    }
+  }
 }
 
 function Get-YamlFiles {
