@@ -45,11 +45,15 @@ function Assert-YamlPolicies {
   [CmdletBinding()]
   param(
     [Parameter(Mandatory = $true)] [System.IO.FileInfo[]] $YamlDirectories,
-    [Parameter(Mandatory = $true)] [System.IO.FileInfo[]] $PolicyDirectories
+    [Parameter(Mandatory = $true)] [System.IO.FileInfo[]] $PolicyDirectories,
+    [Switch] $FailSilently
   )
 
   $results = Get-PolicyResults -PolicyDirectories $PolicyDirectories -YamlDirectories $YamlDirectories
   Write-PolicyResults $results
+  if (-not $FailSilently -and ($results | Where-Object { -not $_.Result -and $_.Policy.FailureSeverity.severityLevel -eq 'Error' }).Count -gt 0) {
+    throw "At least one critical policy failed!"
+  }
 }
 
 function Get-PolicyResults {
