@@ -86,7 +86,7 @@ function Write-PolicyResults {
     }
     "$($_.Policy.PolicyName)...$($_.YamlFile.YamlFileName)...$($_.Result ? 'Passed' : 'Failed')"
   }
-  [console]::ForegroundColor = "white"
+  [Console]::ResetColor()
 }
 
 function Get-Policies {
