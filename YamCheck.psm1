@@ -76,9 +76,7 @@ function Write-PolicyResults {
     [Parameter(Mandatory = $true, ValueFromPipeline = $true)] [PolicyResult[]] $PolicyResults
   )
   $PolicyResults | ForEach-Object {
-    if ($_.Result) {
-      [console]::ForegroundColor = "green"
-    }
+    if ($_.Result) { [console]::ForegroundColor = "green" }
     else {
       switch ($_.Policy.FailureSeverity.severityLevel) {
         'Error'   { [console]::ForegroundColor = "red"; break }
